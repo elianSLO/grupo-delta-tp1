@@ -1,0 +1,49 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+println '[FASE 2 - CONFIGURACION] Gradle lee build.gradle y arma el grafo de tareas'
+
+group = 'demo'
+version = '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Dependencia de la aplicacion
+    implementation 'org.apache.commons:commons-lang3:3.14.0'
+
+    // Dependencias de testing
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+application {
+    mainClass = 'demo.Main'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+abstract class InfoProyectoTask extends DefaultTask {
+
+    @TaskAction
+    void mostrarInfo() {
+        println '[FASE 3 - EJECUCION] Gradle ejecuta la accion de la tarea'
+        println '--- Informacion del proyecto ---'
+        println "Nombre:  ${project.name}"
+        println "Version: ${project.version}"
+        println "Java:    ${System.getProperty('java.version')}"
+        println "Gradle:  ${project.gradle.gradleVersion}"
+    }
+}
+
+tasks.register('infoProyecto', InfoProyectoTask) {
+    group = 'demo'
+    description = 'Muestra informacion del proyecto'
+}
